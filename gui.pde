@@ -16,19 +16,30 @@
 
 synchronized public void win_draw1(PApplet appc, GWinData data) { //_CODE_:controls_window:409447:
   appc.background(#161C46);
+} 
+void GUI() {
+  createGUI();
 } //_CODE_:controls_window:409447:
 
-public void button1_click1(GButton source, GEvent event) { //_CODE_:button1:509619:
-  println("button1 - GButton >> GEvent." + event + " @ " + millis());
+public void deleteLayer(GButton source, GEvent event) { //_CODE_:button1:509619:
+  removeLayer(layersDropList.getSelectedIndex());
 } //_CODE_:button1:509619:
 
-public void button2_click1(GButton source, GEvent event) { //_CODE_:button2:607161:
-  println("button2 - GButton >> GEvent." + event + " @ " + millis());
+public void selectLayer(GButton source, GEvent event) { //_CODE_:button2:607161:
+  updateLayer(layersDropList.getSelectedIndex());
 } //_CODE_:button2:607161:
 
-public void button3_click1(GButton source, GEvent event) { //_CODE_:button3:918390:
-  println("button3 - GButton >> GEvent." + event + " @ " + millis());
+public void newLayer(GButton source, GEvent event) { //_CODE_:button3:918390:
+  createLayer();
 } //_CODE_:button3:918390:
+
+public void layersDropList_click(GDropList source, GEvent event) { //_CODE_:layersDropList:959777:
+  println("layersDropList - GDropList >> GEvent." + event + " @ " + millis());
+} //_CODE_:layersDropList:959777:
+
+public void delLastVertex(GButton source, GEvent event) { //_CODE_:button4:406540:
+  CurrLayer.removeVertex(-1);
+} //_CODE_:button4:406540:
 
 
 
@@ -41,23 +52,38 @@ public void createGUI(){
   surface.setTitle("Sketch Window");
   controls_window = GWindow.getWindow(this, " Controls - VectorDraw", 0, 0, 250, 800, JAVA2D);
   controls_window.noLoop();
-  controls_window.setActionOnClose(G4P.KEEP_OPEN);
+  controls_window.setActionOnClose(G4P.EXIT_APP);
   controls_window.addDrawHandler(this, "win_draw1");
-  button1 = new GButton(controls_window, 10, 70, 230, 30);
-  button1.setText("Face text");
-  button1.setLocalColorScheme(GCScheme.CYAN_SCHEME);
-  button1.addEventHandler(this, "button1_click1");
-  button2 = new GButton(controls_window, 10, 110, 230, 30);
-  button2.setText("Face text");
-  button2.addEventHandler(this, "button2_click1");
-  button3 = new GButton(controls_window, 10, 150, 230, 30);
-  button3.setText("Face text");
+  button1 = new GButton(controls_window, 10, 190, 230, 30);
+  button1.setText("Delete Layer");
+  button1.setTextBold();
+  button1.setLocalColorScheme(GCScheme.RED_SCHEME);
+  button1.addEventHandler(this, "deleteLayer");
+  button2 = new GButton(controls_window, 10, 150, 230, 30);
+  button2.setText("Select Layer");
+  button2.setTextBold();
+  button2.addEventHandler(this, "selectLayer");
+  button3 = new GButton(controls_window, 10, 110, 230, 30);
+  button3.setText("New Layer");
+  button3.setTextBold();
   button3.setLocalColorScheme(GCScheme.GREEN_SCHEME);
-  button3.addEventHandler(this, "button3_click1");
-  label1 = new GLabel(controls_window, 10, 30, 230, 30);
-  label1.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-  label1.setText("My label");
-  label1.setOpaque(false);
+  button3.addEventHandler(this, "newLayer");
+  label1 = new GLabel(controls_window, 10, 40, 230, 260);
+  label1.setTextAlign(GAlign.CENTER, GAlign.TOP);
+  label1.setText("-------- Layer Controls : --------");
+  label1.setTextBold();
+  label1.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
+  label1.setOpaque(true);
+  layersDropList = new GDropList(controls_window, 10, 70, 230, 180, 5, 50);
+  layersDropList.setItems(loadStrings("list_959777"), 0);
+  layersDropList.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
+  layersDropList.addEventHandler(this, "layersDropList_click");
+  button4 = new GButton(controls_window, 10, 230, 120, 50);
+  button4.setIcon("Bullet-006.png", 1, GAlign.WEST, GAlign.RIGHT, GAlign.MIDDLE);
+  button4.setText("DELETE last vertex of the layer");
+  button4.setTextBold();
+  button4.setLocalColorScheme(GCScheme.RED_SCHEME);
+  button4.addEventHandler(this, "delLastVertex");
   controls_window.loop();
 }
 
@@ -68,3 +94,5 @@ GButton button1;
 GButton button2; 
 GButton button3; 
 GLabel label1; 
+GDropList layersDropList; 
+GButton button4; 
